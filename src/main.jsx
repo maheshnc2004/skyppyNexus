@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import "./styles.css";
 
-const TOTAL = 10000;
+const TOTAL = 10203;
 
 const vehicles = [
   { id:"KA-01-MH-4821", driver:"Ravi Kumar", city:"Bengaluru", route:"Bengaluru → Chennai", status:"On Road", speed:54, km:286, fuel:8.6, eta:"18:40" },
@@ -40,7 +40,7 @@ function Metric({ icon, label, value, note, tone="" }) {
 
 function App() {
   const [onRoad, setOnRoad] = useState(7482);
-  const [drivers, setDrivers] = useState(6834);
+  const [drivers, setDrivers] = useState(7482);
   const [activeTrips, setActiveTrips] = useState(4126);
   const [fuel, setFuel] = useState(8.4);
   const [distance, setDistance] = useState(184260);
@@ -49,8 +49,11 @@ function App() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setOnRoad(v => Math.max(6200, Math.min(8900, v + Math.floor(Math.random()*31)-15)));
-      setDrivers(v => Math.min(8200, v + Math.floor(Math.random()*24)+3));
+      setOnRoad(v => {
+        const next = Math.max(6200, Math.min(8900, v + Math.floor(Math.random()*31)-15));
+        setDrivers(next);
+        return next;
+      });
       setActiveTrips(v => Math.max(3000, v + Math.floor(Math.random()*19)-9));
       setFuel(Number((8.0 + Math.random() * .9).toFixed(1)));
       setDistance(v => v + Math.floor(Math.random()*70)+20);
@@ -72,6 +75,8 @@ function App() {
   const time = updated.toLocaleTimeString("en-IN", {
     hour:"2-digit", minute:"2-digit", second:"2-digit"
   });
+  const hour = updated.getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
   return (
     <div className="shell">
@@ -117,7 +122,7 @@ function App() {
         <main className="content">
           <section className="heroRow">
             <div>
-              <h2>Good afternoon,</h2>
+              <h2>{greeting},</h2>
               <p>Here’s your live fleet performance across India.</p>
             </div>
             <div className="livePill"><span/> Live data · {time}</div>
@@ -126,9 +131,9 @@ function App() {
           <section className="summaryGrid">
             <div className="card fleetCard">
               <div className="cardTop"><span>Total Vehicles</span><Truck size={18}/></div>
-              <div className="bigNumber">10,000</div>
+              <div className="bigNumber">10,000+</div>
               <div className="progress"><span style={{width:`${activePct}%`}}/></div>
-              <div className="footLine"><span>{activePct}% currently active</span><b>Static fleet</b></div>
+              <div className="footLine"><span>{activePct}% currently active</span><b></b></div>
             </div>
             <div className="card fleetCard blueCard">
               <div className="cardTop"><span>Vehicles on Road</span><Activity size={18}/></div>
